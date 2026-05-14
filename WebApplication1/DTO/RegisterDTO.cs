@@ -16,11 +16,12 @@ namespace WebApplication1.DTO
 
         [Required]
 
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
         public string? LastName { get; set; }
 
         public string? Hashpassword { get; set; }
 
+        public List<AddressDTO> addressDTOs { get; set; } = new List<AddressDTO>();
     }
 }

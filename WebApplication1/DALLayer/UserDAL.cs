@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using WebApplication1.BLLayer;
 using WebApplication1.DBContext;
 using WebApplication1.DTO;
@@ -14,8 +15,17 @@ namespace WebApplication1.DALLayer
         }
         public async Task<int> RegisterUser(RegisterDTO registerDTO)
         {
-            var res=await _dbContext.Database.ExecuteSqlInterpolatedAsync($"Exec RegisterUser @Email={registerDTO.Email},@PasswordHash={registerDTO.Hashpassword},@FirstName={registerDTO.FirstName},@LastName={registerDTO.LastName}");
-            return res;
+            try
+            {
+                string addressJson =
+                               JsonSerializer.Serialize(registerDTO.addressDTOs);
+                var res = await _dbContext.Database.ExecuteSqlInterpolatedAsync($"Exec RegisterUser @Email={registerDTO.Email},@PasswordHash={registerDTO.Hashpassword},@FirstName={registerDTO.FirstName},@LastName={registerDTO.LastName},@Addresses={addressJson}");
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<HashDTO> Login(LoginDTO loginDTO)
