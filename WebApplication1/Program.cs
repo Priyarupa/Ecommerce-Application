@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 using System.Text;
 using WebApplication1.BLLayer;
 using WebApplication1.DALLayer;
 using WebApplication1.DBContext;
+using WebApplication1.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,28 @@ builder.Services.AddDbContext<EcommerceDBContext>(option =>
 ));
 builder.Services.AddScoped<IProductGet, ProductGet>();
 builder.Services.AddScoped<IUserBL, UserDAL>();
+builder.Services.AddScoped<IorderBL, OrderDAL>();
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+builder.Services.AddScoped<IpaymentInterface, StripePaymentService>();
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -52,6 +76,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAngular");
 
 app.UseHttpsRedirection();
 

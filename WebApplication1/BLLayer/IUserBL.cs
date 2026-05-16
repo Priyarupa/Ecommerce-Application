@@ -6,5 +6,7 @@ namespace WebApplication1.BLLayer
     {
         Task<int> RegisterUser(RegisterDTO registerDTO);
         Task<HashDTO> Login(LoginDTO loginDTO);
+
+        Task<UserProfileDTO> GetUserProfile(int id);
     }
 }

@@ -6,7 +6,7 @@ using WebApplication1.DTO;
 
 namespace WebApplication1.DALLayer
 {
-    public class UserDAL:IUserBL
+    public class UserDAL : IUserBL
     {
         private readonly EcommerceDBContext _dbContext;
         public UserDAL(EcommerceDBContext dbContext)
@@ -32,11 +32,11 @@ namespace WebApplication1.DALLayer
         {
             try
             {
-                var res = (await  _dbContext.Database.SqlQuery<HashDTO>($"Exec dbo.GETHash @Email={loginDTO.Email}").ToListAsync()).FirstOrDefault();
+                var res = (await _dbContext.Database.SqlQuery<HashDTO>($"Exec dbo.GETHash @Email={loginDTO.Email}").ToListAsync()).FirstOrDefault();
 
                 return res;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -44,5 +44,18 @@ namespace WebApplication1.DALLayer
         }
 
 
+        public async Task<UserProfileDTO> GetUserProfile(int id)
+        {
+            try
+            {
+                var res = (await _dbContext.Database.SqlQuery<UserProfileDTO>($"Exec dbo.GetUsersProfile @UserId={id}").ToListAsync()).FirstOrDefault();
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
     }
 }

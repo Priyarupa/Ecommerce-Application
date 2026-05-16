@@ -72,6 +72,18 @@ namespace WebApplication1.Controllers
             return Ok(new { Token = tokenString });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetUserProfile([FromBody] int id)
+        {
+            var res = await _userBL.GetUserProfile(id);
+            if (res == null)
+            {
+                return NotFound();
+            }
+            return Ok(res);
+
+        }
+
     }
 
 
